@@ -70,18 +70,23 @@
      * Bug Alert: Sometimes bitmap2component doesn't make it Negative, even if you select it. The imported image should have a transparent background and the silk screen should be a colored foreground. If the Negative setting is wrong, then the imported image will be mostly solid color with the text and artwork being transparent. Go back and try importing again, clicking Negative/Normal back and forth to clear and reset it.
      * Verify it looks good! Look over all the text carefully. If there's anything weird, make changes in illustrator, save as PNG, and convert with bitmap2component again.
      
-  10. Create the back side copper pour:
+  10. Put all the holes onto the same GND net:
      * Click on each panel component, one at a time, and edit the Pad (not the footprint, we want to edit the pad itself).
+     * It seems you have to have the component UnLocked. That way, when you click on it, it will ask you to edit the footprint or the pad. Select 'pad'. If the component is locked, it won't ask you this.
      * Change the Net of the pad to GND
      * Do this for all the jack and pot holes (or anything that must be grounded).
+![Pad options box](img/faceplate_pad_options.png)
+
+  11. Create the back layer copper zone:
      * Create a Zone on the B.Cu layer, with GND net assigned, and Clearance of 0. This creates a solid copper pour on the back side of the faceplate.
      * Verify the Zone connects to all the pads. If you skipped one when assigning them to GND, it won't connect to the copper pour, which could result in grounding/noise issues.
 
-  11. Create an origin, using the "drill/place origin" tool. Place it on the bottom left Edge of the board (zoom in to get it exact within +/-0.001"). It should display as a red cross-hair
+  12. Create an origin, using the "drill/place origin" tool. Place it on the bottom left Edge of the board (zoom in to get it exact within +/-0.001"). It should display as a red cross-hair
   
   
-  12. Export the gerbers: 
-    * F.Cu, B.Cu. F.SilkS, F.Mask, Edge.Cuts, and Drill file and Drill Map. Notice we skip the B.Mask.
+  13. Export the gerbers: 
+    * F.Cu, B.Cu. F.SilkS, F.Mask, Edge.Cuts, and Drill file and Drill Map. Notice we skip the B.Mask here, we manually create it in the next step. Also, we do not have a B.Silk.
+   
     * De-select `Plot footprint values`
     * De-select `Plot footprint references`
     * Select `Exclude PCB Edge layer from other layers`
@@ -102,10 +107,12 @@
 ![Plot>>>Drill dialog box options](img/faceplate_plot_drill_options.png)
 
     	
-13. Duplicate the Back Copper file as the Back Mask file:
-    * Go into the gbr directory and delete the MyProjectName-B.Mask.gbr file.
-    * Duplicate the B.Cu gerber file, and rename it MyProjectName-B.Mask.gbr
- 	 * In case you want to a create the gerbers manually, here's how:
+14. Duplicate the Back Copper file and rename it the Back Mask file:
+    * Duplicate the B.Cu gerber file
+    * Rename the duplated file as `MyProjectName-B.Mask.gbr`
+    * (there shouldn't be an existing B.Mask.gbr file, but if there is, delete it)
+ 
+15. Skip this step! (But in case you were wondering another way to create the gerbers manually, here's how:)
  	   * Copy a B.Mask.gbr and B.Cu.gbr file from a previous project. There are assorted sizes in the faceplate-masks repository. If the project has the same HP width then just copy it into the gbr/ directory and rename it `MyProjectName-FACEPLATE-B.Mask.gbr` and make another copy named `MyProjectName-FACEPLATE-B.Cu.gbr` 	   
  	   * If we don't have an existing B.Mask gerber for this HP size, then we can make it:
  	      	* Open the file in a text editor.
@@ -116,27 +123,26 @@
  			* Save the file as `MyProjectName-FACEPLATE-B.Mask.gbr` and make another copy named `MyProjectName-FACEPLATE-B.Cu.gbr`
  
  	
-14. Create the gerbv project:
+16. Create the gerbv project:
     * Go to terminal and `cd` into the MyProjectName-faceplate/gbr directory.
-    * Type `make_kicad MyProjectName-faceplate`
+    * Type `kicadfp_gerbv MyProjectName-faceplate`
+    * (if you don't have that installed, try the old command: `make_kicad MyProjectName-faceplate`)
 		* This command looks for files named:
 			* `MyProjectName-faceplate-F.Cu.gbr`
 			* `MyProjectName-faceplate-B.Cu.gbr`
 			* `MyProjectName-faceplate-F.SilkS.gbr`
-			* `MyProjectName-faceplate-B.SilkS.gbr` (not used in faceplates)
 			* `MyProjectName-faceplate-F.Mask.gbr`
 			* `MyProjectName-faceplate-B.Mask.gbr`
-			* `MyProjectName-faceplate-F.Paste.gbr` (not used in faceplates)
 			* `MyProjectName-faceplate-drl_map.gbr`
 			* `MyProjectName-faceplate-Edge.Cuts.gbr`
 			* `MyProjectName-faceplate.drl`
     		* If your files are not named exactly this (replacing `MyprojectName-faceplate` with whatever you typed above), then do a `ls` to see what the file names are. 
     		* Example: If your file names are SuperModule-rev1b-F.Cu.gbr, then you would type `make_kicad SuperModule-rev1b`
-    * Note there is no Front Paste or Back Silk. So you'll get an error that F.Paste and B.SilkS are missing. This is OK, ignore the error.
+    * Note there is no Front Paste or Back Silk. So if you used the old command make_kicad, you'll get an error that F.Paste and B.SilkS are missing. This is OK, ignore the error.
     * Verify it looks good, and adjust as necessary. It's very common to have to make adjustments, so if you think it's perfect the first time, zoom in and check some more!
     * If you editted the B.Mask and B.Cu, check to make sure they looks good. They should line up with the board outline and just be one solid rectangle.
 
-15. Note the dimensions and zip up the gerbers:
+16. Note the dimensions and zip up the gerbers:
 	* In Kicad, note the panel width and height
 	* In the gbr/ folder, create an empty directory or a blank file with these dimensions in the name
 	    * command line example: in terminal type `touch DIM_X-2.988_Y-5.059`
