@@ -71,6 +71,15 @@
      * Verify it looks good! Look over all the text carefully. If there's anything weird, make changes in illustrator, save as PNG, and convert with bitmap2component again.
      
   10. Put all the holes onto the same GND net:
+     * Sometimes you have to create the GND net first (sometimes it's already there?). Select from the menu bar: View -> List Nets. If "GND" is not listed, then create it as follows:
+          * Save the pcb and close KiCAD.
+          * Open the .kicad_pcb file in a text editor
+          * At or around linee 9, you should see a line that says:   `(nets 0)`
+          * Change this to read: `(nets 2)`
+          * Then scroll down to around line 85 or so, until you see this line: `(net 0 "")`
+          * Below it, add this line:   `(net 1 "GND")`
+          * Save the file, close it, and re-open in KiCAD. Verify that View->List Nets shows a GND net
+
      * Click on each panel component, one at a time, and edit the Pad (not the footprint, we want to edit the pad itself).
      * It seems you have to have the component UnLocked. That way, when you click on it, it will ask you to edit the footprint or the pad. Select 'pad'. If the component is locked, it won't ask you this.
      * Change the Net of the pad to GND
@@ -107,7 +116,7 @@
 ![Plot>>>Drill dialog box options](img/faceplate_plot_drill_options.png)
 
     	
-14. Duplicate the Back Copper file and rename it the Back Mask file:
+14. In Finder or Terminal: duplicate the Back Copper file and rename it the Back Mask file:
     * Duplicate the B.Cu gerber file
     * Rename the duplated file as `MyProjectName-B.Mask.gbr`
     * (there shouldn't be an existing B.Mask.gbr file, but if there is, delete it)
@@ -126,6 +135,7 @@
 16. Create the gerbv project:
     * Go to terminal and `cd` into the MyProjectName-faceplate/gbr directory.
     * Type `kicadfp_gerbv MyProjectName-faceplate`
+    * Or `gerbv_fpkicad MyprojectName-faceplate`
     * (if you don't have that installed, try the old command: `make_kicad MyProjectName-faceplate`)
 		* This command looks for files named:
 			* `MyProjectName-faceplate-F.Cu.gbr`
@@ -140,7 +150,7 @@
     		* Example: If your file names are SuperModule-rev1b-F.Cu.gbr, then you would type `make_kicad SuperModule-rev1b`
     * Note there is no Front Paste or Back Silk. So if you used the old command make_kicad, you'll get an error that F.Paste and B.SilkS are missing. This is OK, ignore the error.
     * Verify it looks good, and adjust as necessary. It's very common to have to make adjustments, so if you think it's perfect the first time, zoom in and check some more!
-    * If you editted the B.Mask and B.Cu, check to make sure they looks good. They should line up with the board outline and just be one solid rectangle.
+    * If you edited the B.Mask and B.Cu, check to make sure they looks good. They should line up with the board outline and just be one solid rectangle.
 
 16. Note the dimensions and zip up the gerbers:
 	* In Kicad, note the panel width and height
