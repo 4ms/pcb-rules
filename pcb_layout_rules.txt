@@ -1,13 +1,13 @@
-"Pref" means preferred minimum value. Use the largest value possible for each design, since larger/thicker is more reliable and legible.
+"Pref" means preferred minimum value. Do not go below this value unless there is a unique reason to do so. Use the largest value possible for each design, since larger/thicker is more reliable/legible.
 
-"PCBCart Min" is the minimum value our board house will allow. Often there is a surcharge for this.
+"PCBCart Min" is the minimum value our board house will allow. Often there is a surcharge for this. It should be avoided unless there’s no reasonable way around it.
 
 
 
 Trace thickness: 
 PCBCart Min: 0.004
-Pref (if necessary): 0.005
-Pref (cheaper): 0.008 
+Pref: 0.005
+Typical: 0.008 
 
 Clearance/spacing:
 PCBCart Min: 0.004
@@ -25,8 +25,9 @@ Pref: 0.020 with 0.008 hole, or 0.032 with 0.016 hole
 
 Silk legends: (Height/Width/Thickness)
 PCBCart Min: ???
-Pref: 0.040/0.040/0.006
-Min legible: 0.024/0.024/0.006
+Pref: 0.040/0.040/0.006 = 1mm/1mm/.15mm
+Min legible: 0.024/0.024/0.006 = 0.6mm/0.6mm/.15mm
+Bigger and thicker is easier to read, if there’s room.
 
 Distance from Edge Cut to pad or trace:
 Pref: 10mil
