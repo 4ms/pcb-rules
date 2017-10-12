@@ -1,27 +1,11 @@
 ## HOW TO MAKE A FACEPLATE in KiCAD##
-
-  1. Illustrator
-       * Open the Adobe Illustrator file of the artwork and hide all layers except the artwork (no holes, panel outline, milling, etc)
-
-     * Save it ("Export for Screens...") as a PNG at 2000ppi, with no Anti-aliasing. This gives us 0.5mil resolution. 
-     * Save it in a new folder called `MyProjectName-FACEPLATE` inside the kicad project directory. (replace `MyProjectName` with the name of the project we're working on, such as `DLD` or `SMR`...
-     * Create a new folder inside `MyProjectName-FACEPLATE` called `artwork.pretty`
-     * Optionally, create another new folder called `artwork sources` and put the Illustrator files and PNG exports (if you have them already) in there.
-
-  2. Bitmap2component (KiCAD program)
-     * Click "Load Bitmap" and select the PNG file
-     * Set Format to Pcbnew (.kicad_mod file)
-     * Set Options to Negative (sometimes you have click Normal and the Negative to get it to do Negative--it's a bug)
-     * Set Threshold Value to 99
-     * Set Board Layer for Outline: to Front silk screen
-     * Verify the Black&White Picture preview looks accurate
-     * Click "Export" and then  save the file in `MyProjectName-FACEPLATE/artwork.pretty`. Call it `MyProjectName-FACEPLATE-artwork-revXXX.kicad_mod`, where revXXX is the revision like "rev2c"
-     * If the artwork is supposed to be on the copper layer (Gold or Silver), then unforutnately KiCAD does not support this directly. But it's easy to do manually:
-     	* Export it into the Eco1.User layer instead of the Front silk layer
-     	* Open the .kicad_mod in a text editor
-     	* Do a global search and replace for `Eco1.User`, replacing it with `F.Cu`
      
-  3. In KiCAD, open the pcb file (`MyProjectName.kicad_pcb`) and do a "Save As..." into the `MyProjectName-FACEPLATE` directory. Call the new file `MyProjectName-FACEPLATE.kicad_pcb`, and open it up in pcbnew
+### Part 1: PCB Faceplate (holes and milling) ###
+
+  1. Create a new folder called `MyProjectName-FACEPLATE` inside the kicad project directory. (replace `MyProjectName` with the name of the project we're working on, such as `DLD` or `SMR`...
+
+  2. In Finder or Terminal, copy the pcb file (`MyProjectName.kicad_pcb`) into the `MyProjectName-FACEPLATE` directory. Rename the file `MyProjectName-FACEPLATE.kicad_pcb`
+  3. Open pcbnew directly (not through KiCAD -- just double click the pcbnew icon inside the Applications/Kicad/ folder). Open up `MyProjectName-FACEPLATE.kicad_pcb`
 
   4. Delete all traces, silk, and components from the file except the panel components (jacks, pots, etc..). Leave just the panel components and the board outline (Edge.Cuts layer)
  
@@ -38,10 +22,14 @@
      * Repeat this process for every other type of panel component
 ![](img/faceplate_change_footprint.png)
 
-  6. Create an outline in Edge.Cuts that matches the faceplate outline
+     
+  6. Flip all the components, so that everything is on the front layer:
+     * Select all, then hit "F" and the "R" twice. 
+    
+  7. Create an outline in Edge.Cuts that matches the faceplate outline
      * In Illustrator, measure the X and Y distance from the center of a component on the pcb (eg: a jack hole) to a corner of the panel.
      * Also measure the Width and Height of the panel (height is always 5.059" for eurorack)
-     * In Kicad, use the X/Y distances to figure out where the corner of the panel should be, relative to the center of that same component hole. Keep in mind the board is probably flipped from the view you see in Illustrator. Also keep in mind Illustrator and Kicad use different directions for + and -.
+     * In Kicad, use the X/Y distances to figure out where the corner of the panel should be, relative to the center of that same component hole. Keep in mind Illustrator and Kicad use different directions for + and -.
        * One way to do this, is to select everything in kicad and move it all so that the reference hole is at the origin (0,0).
        * Then draw a line for the bottom of the panel in the Edge.Cuts layer.
        * Edit line to enter in its X/Y values:
@@ -54,23 +42,9 @@
   
      * Delete the PCB outline, leaving just the faceplate outline and the `FaceplateHole_` components.
      
-  7. Add rail-mounting slots: Add the `4ms-faceplate:FACEPLATE-Rail-mount-slot` components to the PCB and place where they need to be (center X:0.295, Y:0.118 from corners). Note that this footprint was altered using a text editor to make the lines and arcs be in the Edge.Cuts layer (which the pcb footprint editor doesn't allow for some reason)
+  8. Add rail-mounting slots: Add the `4ms-faceplate:FACEPLATE-Rail-mount-slot` components to the PCB and place where they need to be (the center should be X:0.295 and Y:0.118 from each corner). Note that this footprint was altered using a text editor to make the lines and arcs be in the Edge.Cuts layer (which the pcb footprint editor doesn't allow for some reason)
 
-     
-  8. If the original PCB had the panel components on the Back layer, then now you have to __Flip all the components__ :
-     * In kicad, select all, then hit "F" and the "R" twice. Then move it back to the origin
-     * If you flipped, verify the Rail Mount holes are still correct-- for small boards with just two rail slots, they will be on the wrong side, so check that now. The A-100 mechanical specs are publised on doepfer's web site if you're ever unsure. We use slots so they are compatible with DIY and AS systems
-    
-     
-  9. Add the artwork as a footprint:
-     * Select Footprint Libraries Wizard from the Preferences menu, and add the artwork.pretty directory to "The current project only" (do not add it to global libraries).
- 
-     * An easy way is to click the Add Footprint icon, click "List All", then type "artwork" in the field. It'll only show for footprints with the name artwork, which is what you should have named the .kicad_mod file.
-     * Center it, position it carefully to it's lined up with the holes.
-     * Bug Alert: Sometimes bitmap2component doesn't make it Negative, even if you select it. The imported image should have a transparent background and the silk screen should be a colored foreground. If the Negative setting is wrong, then the imported image will be mostly solid color with the text and artwork being transparent. Go back and try importing again, clicking Negative/Normal back and forth to clear and reset it.
-     * Verify it looks good! Look over all the text carefully. If there's anything weird, make changes in illustrator, save as PNG, and convert with bitmap2component again.
-     
-  10. Put all the holes onto the same GND net:
+  9. Put all the holes onto the same GND net:
      * Sometimes you have to create the GND net first (sometimes it's already there?). Select from the menu bar: View -> List Nets. If "GND" is not listed, then create it as follows:
           * Save the pcb and close KiCAD.
           * Open the .kicad_pcb file in a text editor
@@ -86,12 +60,51 @@
      * Do this for all the jack and pot holes (or anything that must be grounded).
 ![Pad options box](img/faceplate_pad_options.png)
 
-  11. Create the back layer copper zone:
-     * Create a Zone on the B.Cu layer, with GND net assigned, and Clearance of 0. This creates a solid copper pour on the back side of the faceplate.
+ 10. Create the back layer copper zone:
+     * Create a Zone on the B.Cu layer, with GND net assigned, Clearance set to 0, and Default pad connection set to "Solid". This creates a solid copper pour on the back side of the faceplate.
      * Verify the Zone connects to all the pads. If you skipped one when assigning them to GND, it won't connect to the copper pour, which could result in grounding/noise issues.
+     * ![Zone options dialog](img/back_copper_zone_options.png)
 
+
+
+###Part 2: Artwork ###
+  1. Open the Adobe Illustrator file of the artwork and hide all layers except the artwork (no holes, panel outline, milling, etc)
+     * Save it ("Export for Screens...") as a PNG at 2000ppi, with no Anti-aliasing. This gives us 0.5mil resolution. 
+     * Create a new folder directly inside the project folder called `artwork sources` and put the Illustrator files and PNG exports in there.
+     * Create another new folder directly inside the project folder called `artwork.pretty` (we'll use it in the next step).
+
+
+  2. Bitmap2component (KiCAD program)
+     * Click `Load Bitmap` and select the PNG file
+     * Set Format to `Pcbnew (.kicad_mod file)`
+     * Set Options to Negative (sometimes you have click Normal and the Negative to get it to do Negative--it's a bug)
+     * Set Board Layer for Outline to `Front silk screen` if you want it to be on the silk layer, or `Front solder mask` if you want it to be on the mask layer. If you want it to be on the copper layer, use `Eco1.User` (see below)
+     * Set `Threshold Value` to 99
+     * Click the `Black&White Picture` tab and verify the preview looks accurate. If you don't see the artwork, then adjust `Threshold Value` down. For example, if your PNG has color in it, you may have to adjust Threshold down to 1 or 2.
+     * Click `Export` and then  save the file in `artwork.pretty` folder. Call it `MyProjectName-FACEPLATE-artwork-layername-revXXX.kicad_mod`, where layername is the layer (silk, copper, mask) and revXXX is the revision like "rev2c"
+     * If the artwork is supposed to be on the copper layer (Gold or Silver), then unforutnately KiCAD does not support this directly. But it's easy to do manually:
+     	* Export it into the `Eco1.User` layer instead of `Front silk layer`
+     	* Open the .kicad_mod in a text editor
+     	* Do a global search and replace for `Eco1.User`, replacing it with `F.Cu`
+
+     
+  9. Add the artwork as a footprint:
+     * Go to the pcb file in pcbnew
+     * Select Footprint Libraries Wizard from the Preferences menu:
+       *  Select `Files on my computer` and click `Next`
+       *  Find the `artwork.pretty` folder and click on it, then click `Next`
+       *  Confirm it found the files (it should say "artwork" in the Library column). Click `Next`
+       *  Click `To the current project only` and click `Finish`
+ 
+     * Now add the artwork images:
+       * Click the Add Footprint icon, click "List All", then type "artwork" in the field. It'll only show for footprints with the name artwork, which is what you should have named the .kicad_mod file.
+       * Center it, position it carefully to it's lined up with the holes.
+       * Bug Alert: Sometimes bitmap2component doesn't make it Negative, even if you select it. The imported image should have a transparent background and the silk screen should be a colored foreground. If the Negative setting is wrong, then the imported image will be mostly solid color with the text and artwork being transparent. Go back and try importing again, clicking Negative/Normal back and forth to clear and reset it.
+       * Verify it looks good! Look over all the text carefully. If there's anything weird, make changes in illustrator, save as PNG, and convert with bitmap2component again.
+     
   12. Create an origin, using the "drill/place origin" tool. Place it on the bottom left Edge of the board (zoom in to get it exact within +/-0.001"). It should display as a red cross-hair
   
+### Part 3: Export and Verify ###
   
   13. Export the gerbers: 
     * F.Cu, B.Cu. F.SilkS, F.Mask, Edge.Cuts, and Drill file and Drill Map. Notice we skip the B.Mask here, we manually create it in the next step. Also, we do not have a B.Silk.
@@ -121,7 +134,7 @@
     * Rename the duplated file as `MyProjectName-B.Mask.gbr`
     * (there shouldn't be an existing B.Mask.gbr file, but if there is, delete it)
  
-15. Skip this step! (But in case you were wondering another way to create the gerbers manually, here's how:)
+ <!--15. Skip this step! (But in case you were wondering another way to create the gerbers manually, here's how:)
  	   * Copy a B.Mask.gbr and B.Cu.gbr file from a previous project. There are assorted sizes in the faceplate-masks repository. If the project has the same HP width then just copy it into the gbr/ directory and rename it `MyProjectName-FACEPLATE-B.Mask.gbr` and make another copy named `MyProjectName-FACEPLATE-B.Cu.gbr` 	   
  	   * If we don't have an existing B.Mask gerber for this HP size, then we can make it:
  	      	* Open the file in a text editor.
@@ -129,13 +142,11 @@
  			* Change the next six digits to the new width. So if the line is `%ADD10R,1.23456X5.05900*%` then 1.23456 is the width of the old panel, and 5.05900 is the height. The height will be the same, so we only have to change the width. We should change that to 0.78700 for 4HP (for example), making it `%ADD10R,0.78590X5.05900*%`. **It is absolutely critical that the new number has the same number of digits as the old number (one digit before the decimal place and five digits after)**
  			* Next, find the line (two lines down usually) that starts with `X0`.
  			* Change the line to be the center of the board. So if it was `X0059055Y0252950D03*` then that says the center is 0.59055, 2.5295. The second value (2.5295) is half of the 5.0590 value from above and so it won't change. The first value will change: Divide the faceplate width by two (0.78700 / 2 = 0.39350) to get the first value. So now the line should read `X0039295Y0252950D03*`. **Again, it's critical that the number has the exact same number of digits as the previous value. Pad it with zeroes on the left if it doesn't.**
- 			* Save the file as `MyProjectName-FACEPLATE-B.Mask.gbr` and make another copy named `MyProjectName-FACEPLATE-B.Cu.gbr`
- 
+ 			* Save the file as `MyProjectName-FACEPLATE-B.Mask.gbr` and make another copy named `MyProjectName-FACEPLATE-B.Cu.gbr` -->
  	
 16. Create the gerbv project:
     * Go to terminal and `cd` into the MyProjectName-faceplate/gbr directory.
-    * Type `kicadfp_gerbv MyProjectName-faceplate`
-    * Or `gerbv_fpkicad MyprojectName-faceplate`
+    * Type `gerbv_fpkicad MyprojectName-faceplate`
     * (if you don't have that installed, try the old command: `make_kicad MyProjectName-faceplate`)
 		* This command looks for files named:
 			* `MyProjectName-faceplate-F.Cu.gbr`
@@ -160,3 +171,18 @@
 	    * Zip up the gerber and drill files, and name the zip file `MyProject-revXX.zip`
 	       * It's very important to put the revision number in the zip file name!
 	* When we go to order this board, the PCB house will ask us to upload the zip file and enter in the dimensions. Having an empty folder or a file with the dimensions in the name makes it very easy to do both these things in one step!
+
+### Making "clear" openings in a PCB ###
+  * This is an experimental, advanced technique. The clear area must be blank in both copper and silk files, and must be present in both mask files. Getting this to happen is tricky...
+    1. Front mask: put the clear section in the front mask PNG, so that it shows up in the front mask footprint (perhaps it would also work to have a secondary footprint that's just the clear section?)
+    2. Front copper/silk: must be no copper or silk in the clear section. This is easy: just make sure the copper and silk PNGs are white in the area that needs to be clear.
+    3. Back mask: The back mask file is not the same as the back copper anymore. I exported a back copper gerber before doing anything with the clear section. Then I renamed it as a back mask layer. This gave me a mask that covers the whole board, minus the milling (rail mount slots, slider slots). Another idea is to make a rectanglular mask that covers the whole board by manually typing in the coordinates into a text file to make a gerber file (as explained in the commented-out section above). However it's done, the back mask layer must cover the clear area so that the clear area is "masked", that is, no mask ink is applied to the area.
+    4. Back copper: This was the hardest part to figure out. The back side should be a continguous zone except for the holes/milling and the clear area. I was able to do this by:
+      5. bitmap2component: open the clear area PNG and export it as a copper layer
+      6. add the component to the PCB, and flip it to the back side
+      7. Position it where it needs to be
+      8. Create a zone on the back side, connected to GND (should already have this)
+      9. Press "B" to update the zone. It should automatically avoid touching the clear area copper footprint
+      10. Select the clear area footprint and delete it. Immediately export the back copper layer gerber.
+      11. Of course, if kicad ever changes whereby it automatically updates the zone when something is deleted, then this trick won't work. But perhaps we could still export a gerber before deleting the clear area footprint, and then manually delete these footprint's zones in the gerber file.
+	
