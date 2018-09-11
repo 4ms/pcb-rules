@@ -57,11 +57,13 @@
      * Click on each panel component, one at a time, and edit the Pad (not the footprint, we want to edit the pad itself).
      * It seems you have to have the component UnLocked. That way, when you click on it, it will ask you to edit the footprint or the pad. Select 'pad'. If the component is locked, it won't ask you this.
      * Change the Net of the pad to GND
-     * Do this for all the jack and pot holes (or anything that must be grounded).
+     * See the screenshot below for how each pad should be set. Repeat this for all the holes. Note: PCBCart has warned us that if there is not a mask opening on both sides of the board, then some of the soldermask oil will flow into the hole and make the hole smaller. If the hole size is critical (e.g. with light pipes) then the F.Mask and B.Mask boxes must be checked in the above dialog box. They recommend the mask element be 4mil larger than the hole all the way around (8mil larger diameter).
+
 ![Pad options box](img/faceplate_pad_options.png)
 
  10. Create the back layer copper zone:
-     * Create a Zone on the B.Cu layer, with GND net assigned, Clearance set to 0, and Default pad connection set to "Solid". This creates a solid copper pour on the back side of the faceplate.
+     * Draw a square Zone covering the whole board on the B.Cu layer, making sure to keep it at least 10mil from the board edge.
+     * In the Zone properties dialog: GND net assigned, Clearance set to 0, and Default pad connection set to "Solid". This creates a solid copper pour on the back side of the faceplate.
      * Verify the Zone connects to all the pads. If you skipped one when assigning them to GND, it won't connect to the copper pour, which could result in grounding/noise issues.
      * ![Zone options dialog](img/back_copper_zone_options.png)
 
@@ -69,6 +71,7 @@
 
 ###Part 2: Artwork ###
   1. Open the Adobe Illustrator file of the artwork and hide all layers except the artwork (no holes, panel outline, milling, etc)
+  2. Verify there is no silkscreen extending over holes. This can cause PCB Cart to delay our order. They've told us that silk screen inside the hole can cause the hole to be smaller, unless they manually trim the silk away.
      * Save it ("Export for Screens...") as a PNG at 2000ppi, with no Anti-aliasing. This gives us 0.5mil resolution. 
      * Create a new folder directly inside the project folder called `artwork sources` and put the Illustrator files and PNG exports in there.
      * Create another new folder directly inside the project folder called `artwork.pretty` (we'll use it in the next step).
@@ -159,9 +162,15 @@
 			* `MyProjectName-faceplate.drl`
     		* If your files are not named exactly this (replacing `MyprojectName-faceplate` with whatever you typed above), then do a `ls` to see what the file names are. 
     		* Example: If your file names are SuperModule-rev1b-F.Cu.gbr, then you would type `make_kicad SuperModule-rev1b`
-    * Note there is no Front Paste or Back Silk. So if you used the old command make_kicad, you'll get an error that F.Paste and B.SilkS are missing. This is OK, ignore the error.
+    * Note there is no Front Paste or Back Silk. So if you used the old command make_kicad, you'll get an error that F.Paste and B.SilkS are missing.
     * Verify it looks good, and adjust as necessary. It's very common to have to make adjustments, so if you think it's perfect the first time, zoom in and check some more!
     * If you edited the B.Mask and B.Cu, check to make sure they looks good. They should line up with the board outline and just be one solid rectangle.
+    * __Common things for which PCB Cart will delay our order while asking us what to do:__
+        * No soldermask opening around all holes. They request a soldermask element 8mil diameter larger than the hole itself. The soldermask oil will flow into the hole and make it smaller if we don't have a soldermask element.
+        * Silk screen extending into holes. This can also make the hole smaller. Trim silk layers in illustrator before exporting the PNG
+        * Copper plane (zone) within 10mil of the edge. Make sure there is 10mil clearance between edge of zone and edge of board.
+        * Copper areas too close to each other (less than 5mil space between). This includes pads and text copper areas.
+        * Silk or copper artwork less then 0.5pt (? not sure what the minimum is, but 0.3pt line has gotten us flagged, and 0.5pt line gets us flagged sometimes). This includes line thickness as well as dashes and dots.
 
 16. Note the dimensions and zip up the gerbers:
 	* In Kicad, note the panel width and height
