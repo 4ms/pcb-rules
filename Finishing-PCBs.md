@@ -44,10 +44,8 @@ Pre-checks:
 5. Verify the design with gerbv:
 	To do this, you need gerbv installed, and also Dan's script called make_kicad
 	   * In terminal, navigate to the gbr/ directory
-	   * type: `make_kicad PROJECT_NAME` where PROJECT_NAME is the beginning of the gerber files up until the last dash '-'. Example "qcd-expander-20-F.SilkS.gbr" project name is "qcd-expander-20"
+	   * type: `gerbv_kicad PROJECT_NAME` where PROJECT_NAME is the beginning of the gerber files up until the last dash '-'. Example "qcd-expander-20-F.SilkS.gbr" project name is "qcd-expander-20"
 	   * When it's good, zip up all the gbr and drill files into a zip file that's the name of the project and revision:
 	   `QCDEXP-kit-p1` or `-v2.1`
 
-5. git tag it like this:
-
-		git tag -a rev0.1-ordered -m "Ordered with PCBCart 6/7/2017"
+5. Create a tag in git that tells us the PCB version and that we ordered boards. For example: "p3 ordered with PCBCart". Or "v1.1 ordered PCBA with ___". Remember to push the tag (or else no one else will be able to see it)

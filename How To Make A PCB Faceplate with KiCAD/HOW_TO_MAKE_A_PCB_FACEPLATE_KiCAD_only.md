@@ -2,6 +2,8 @@
      
 ### Part 1: PCB Faceplate (holes and milling) ###
 
+  ****Note: These instructions are no longer necessary: We have a set of python scripts that do all these steps (up until the Artwork, which of course has to be drawn by a human)****
+  
   1. Create a new folder called `MyProjectName-FACEPLATE` inside the kicad project directory. (replace `MyProjectName` with the name of the project we're working on, such as `DLD` or `SMR`...
 
   2. In Finder or Terminal, copy the pcb file (`MyProjectName.kicad_pcb`) into the `MyProjectName-FACEPLATE` directory. Rename the file `MyProjectName-FACEPLATE.kicad_pcb`
@@ -61,7 +63,7 @@
 
 ![Pad options box](img/faceplate_pad_options.png)
 
- 10. Create the back layer copper zone:
+  10. Create the back layer copper zone:
      * Draw a square Zone covering the whole board on the B.Cu layer, making sure to keep it at least 10mil from the board edge.
      * In the Zone properties dialog: GND net assigned, Clearance set to 0, and Default pad connection set to "Solid". This creates a solid copper pour on the back side of the faceplate.
      * Verify the Zone connects to all the pads. If you skipped one when assigning them to GND, it won't connect to the copper pour, which could result in grounding/noise issues.
@@ -71,10 +73,22 @@
 
 ###Part 2: Artwork ###
   1. Open the Adobe Illustrator file of the artwork and hide all layers except the artwork (no holes, panel outline, milling, etc)
-  2. Verify there is no silkscreen extending over holes. This can cause PCB Cart to delay our order. They've told us that silk screen inside the hole can cause the hole to be smaller, unless they manually trim the silk away.
-     * Save it ("Export for Screens...") as a PNG at 2000ppi, with no Anti-aliasing. This gives us 0.5mil resolution. 
-     * Create a new folder directly inside the project folder called `artwork sources` and put the Illustrator files and PNG exports in there.
-     * Create another new folder directly inside the project folder called `artwork.pretty` (we'll use it in the next step).
+  2. If you have KiCAD 5.1, then skip to the next step (it no longer needs to happen because KiCad has a checkbox in the gerber exports to subtract silkscreen from mask.) If you have Kicad 4 (or maybe 5.0) then verify there is no silkscreen extending over holes. This can cause PCB Cart to delay our order. They've told us that silk screen inside the hole can cause the hole to be smaller, unless they manually trim the silk away.
+  3. Use Illustrator's Asset Export feature to export the artwork as a PNG at 2000ppi, with no Anti-aliasing. This gives us 0.5mil resolution. //Todo: create more detailed instructions for using Asset Export.// Note that if you use the Export for Screens... command in Illustrator then do not clip to the artboard (the file will be bigger than it needs to be and bitmap2component will choke).
+  4. Create a new folder directly inside the project folder called `artwork sources` and put the Illustrator files and PNG exports in there.
+  5. Create another new folder directly inside the project folder called `artwork.pretty` (we'll use it in the next step).
+  6. Black & Gold, White & Silver faceplates (faceplates with copper, mask, and silk layers):
+     * A black & gold faceplate is defined as having black mask and exposed copper (gold, silver, or tin plated), and white silk screen.
+     * A white & silver faceplate is defined as having white mask and exposed copper (gold, silver, or tin plated), and a black silk screen.
+     * Both of these require three artwork files: silk, copper, and mask
+     * Black & Gold:
+        * This is some advice based on our experience with the SWN: The silk layer should not overlap with the copper or mask layer. So wherever there is a pixel in the silk PNG, there should not be a pixel in the mask or copper PNG. Why? Because putting silk on top of a copper layer makes it look kind of runny. Putting silk on the mask layer means the silk is on top of a mask opening, so it's on bare FR4 and looks bad. Of course, you can break this rule but think carefully about it!
+        * To make it look like silk is printed on top of copper, the copper should be cut out where the text appears. No silk should be where the copper is cut out. We want it to be black inside the copper, which means we want mask ink, not silk, inside the copper. Thus the
+        * The copper and mask layers should be the same. This just means all copper will be exposed; and anywhere there's no copper there will be black mask (with or without silk on top of the mask). Why? If there is any difference between the copper and mask, it'll just look like a little raised bump where the mask opening is not present but the copper is; or conversely it'll be bare FR4 fiberglass where the mask opening is present and the copper is not.
+        
+     * White & Silver:
+        * This advice is based on the SWN and the STS: the silk layer should not overlap with the copper or mask layers (same reasoning as for Black & Gold, see above). To make it look like words or art is printed on top of copper, the copper should be cut out where the words appears, and the silk layer should have the art.
+        * The copper and mask layers should be different: The mask layer openings should appear wherever there is copper, plus there should be the mask openings where there's silk within a copper region. This makes the silk look like it's on top of the copper region.
 
 
   2. Bitmap2component (KiCAD program)

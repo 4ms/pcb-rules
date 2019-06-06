@@ -15,8 +15,10 @@
 **Note: You cannot have more than one dot "." in the name or else pdflatex chokes! Listen-Four-v1.2.wrl.u3d does not work, it has to be Listen-Four-v1-2.u3d**
 
 7) On the next screen make sure to check the "color" checkbox.
+Click Save. It might take 30 seconds or more
 
 8) You might see a .tex file created with the .u3d file. If not, use this (Change NAME-OF-THE-u3d-FILE.u3d to the actual file name):
+
 
 ```
 \documentclass[a4paper]{article}
@@ -35,6 +37,11 @@
 \end{document}
 
 ```
+To change the zoom, adjust the 3Droo parameter (larger number is more zoomed out. Try 200.0). 
+
+3Dc2c is the rotation of the object.
+
+3Dcoo seems to be the offset X Y(Left/Right) Z and also zoom?
 
 9) For your first time, you have to install pdflatex and movie15
 
