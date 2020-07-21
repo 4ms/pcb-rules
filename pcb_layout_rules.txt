@@ -12,7 +12,8 @@ Typical: 0.008
 Clearance/spacing:
 PCBCart Min: 0.004
 Pref (if necessary): 0.005
-Pref (cheaper): 0.008 
+Pref: 0.010
+Sensitive/Power: 0.015 
 
 Via holes:
 PCBCart Min: 0.004
