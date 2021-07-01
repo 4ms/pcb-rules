@@ -33,3 +33,10 @@ Bigger and thicker is easier to read, if there’s room.
 Distance from Edge Cut to pad or trace:
 Pref: 10mil
 
+
+Height and Width of PCB:
+Height ideal: 4.3" (109.22mm)
+Heigh max (if necessary): 4.365" (110.871mm)
+Width ideal < width of faceplate (EnsOsc = 2.9mm shorter than faceplate)
+Width max = width of faceplate
+
