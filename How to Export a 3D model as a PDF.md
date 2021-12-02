@@ -10,14 +10,14 @@
 
 5) Open Meshlab and select File > Import Mesh... and select the .wrl file.
 
-6) Do File > Export Mesh as..., pick "U3D format" and name the new file something .u3d (remove the .wrl extension)
+6) Do File > Export Mesh As..., pick "U3D format" and name the new file something .u3d (remove the .wrl extension)
 
 **Note: You cannot have more than one dot "." in the name or else pdflatex chokes! Listen-Four-v1.2.wrl.u3d does not work, it has to be Listen-Four-v1-2.u3d**
 
 7) On the next screen make sure to check the "color" checkbox.
 Click Save. It might take 30 seconds or more
 
-8) You might see a .tex file created with the .u3d file. If not, use this (Change NAME-OF-THE-u3d-FILE.u3d to the actual file name):
+8) You might see a .tex file created with the .u3d file. For some reason it often places the file a couple directories up. If you can't find it, create a new text file and paste in this text. Change NAME-OF-THE-u3d-FILE.u3d to the actual file name:
 
 
 ```
