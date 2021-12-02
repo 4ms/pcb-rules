@@ -1,4 +1,4 @@
-## HOW TO MAKE A FACEPLATE in KiCAD##
+## How to Make a Faceplate in KiCad##
      
 ### Part 1: PCB Faceplate (holes and milling) ###
 
