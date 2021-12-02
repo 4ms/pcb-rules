@@ -1,9 +1,8 @@
 ##Finishing a PCB for the board house##
 
 Pre-checks:
+
 1. Create an origin on one of the corners: Use the "place and drill origin" tool (not one of the other many origin tools!)
- 
-1. Archive the libraries (TODO)
 2. Push your commit for review of teammates
 3. When reviewed and confirmed OK, push your commit (if any changes)
 
@@ -16,6 +15,7 @@ Pre-checks:
   - `B.SilkS`
   - `B.Mask`
   - `F.Paste` (only if it's an SMT PCBA project)
+  - `B.Paste` (only if it's an SMT PCBA project AND there are components on the back)
   - `Edge.Cuts`
   
     * Check Plot footprint values
