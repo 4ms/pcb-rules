@@ -8,10 +8,10 @@ Pre-checks:
 
 4. Export the gerbers: Select "Plot" from the File menu
 
-  - `F.Cu (aka Top)`
+  - `F.Cu`
   - `F.SilkS`
   - `F.Mask`
-  - `B.Cu` `(aka Bottom)`
+  - `B.Cu`
   - `B.SilkS`
   - `B.Mask`
   - `F.Paste` (only if it's an SMT PCBA project)
@@ -41,11 +41,16 @@ Pre-checks:
 		* Click `Map File`
 		* Close the windows
 
-5. Verify the design with gerbv:
-	To do this, you need gerbv installed, and also Dan's script called make_kicad
-	   * In terminal, navigate to the gbr/ directory
-	   * type: `gerbv_kicad PROJECT_NAME` where PROJECT_NAME is the beginning of the gerber files up until the last dash '-'. Example "qcd-expander-20-F.SilkS.gbr" project name is "qcd-expander-20"
-	   * When it's good, zip up all the gbr and drill files into a zip file that's the name of the project and revision:
-	   `QCDEXP-kit-p1` or `-v2.1`
+6. Verify the design with Gerber Viewer:
+  * Open up Gerber Viewer from the Kicad project window.
+  * Select File > Open Gerb Job file... and open the .gbrjob file that's was just created in the gbr/ folder.
+  * BEFORE CLICKING ANYWHERE: Select File > Open Excellon Drill File and open the .drl file in the gbr/ folder.
+       - If you did click somewhere, then before you open the .drl file, make sure that in the Layers Manager pane on the right, the first empty layer is selected (a little blue arrow shows which layer is selected, and empty layers are named "Graphic Layer ##")
+  * Verify the layers look good: zoom in and out, hide/show layers, select layers to bring them to the front, etc.
+   		- TODO: list specific things to look for (problems, etc)
+ 
+  * Zip up the gerber files and drl files into a zip file named `MyProject-revision#.zip`. revision# should be either `p#` such as p1, p2, p3, etc for prototypes, or `v#.#` such as `v1.2` for production boards.
+  * Send the files to JLCPCB or Imagineering and you're done! 
 
-5. Create a tag in git that tells us the PCB version and that we ordered boards. For example: "p3 ordered with PCBCart". Or "v1.1 ordered PCBA with ___". Remember to push the tag (or else no one else will be able to see it)
+	
+7. Create a tag in git that tells us the PCB version and that we ordered boards. For example: "p3 ordered with PCBCart". Or "v1.1 ordered PCBA with ___". Remember to push the tag (or else no one else will be able to see it)
