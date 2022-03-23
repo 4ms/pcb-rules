@@ -17,31 +17,37 @@
 
 8. Follow the instructions and screenshot below to finish generating DFX file.
 
-**DFX Exportation Settings**
+	**DFX Exportation Settings**
+	
+	
+	AutoCAD version: R13/LT95 or 2000/LT2000 or 2013/LT2013
+	
+	**Artwork Scale**
+	
+	Scale: 1 Inches = 1 Unit(s). (Millimeters has also been known to work with LT2000)
+	
+	Checked or Unchecked: Scale Lineweights. (depends on your preference for the appearance)
+	
+	**Color & File Format:**
+	
+	Number of Colors: 8. (256 seems to work too)
+	
+	Raster Format: PNG
+	
+	**Options**
+	
+	Select: Preserve Appearance
+	
+	Checked or Unchecked: Export Selected Art Only (this just sets whether you want to export the whole document or just your selection)
+	
+	Unchecked: Alter Paths for Appearance. (sometimes it needs to be checked, not sure what this really does)
+	
+	Checked: Outline Text (unless you already outlined the text)
+	
+	![Export settings screenshot](AI-2021-dxf-export-settings.png)
 
+9. In KiCad, open the PCB editor and select File > Import > Graphics
 
-AutoCAD version: R13/LT95 or 2000/LT2000 or 2013/LT2013
+10. Click Browse to select your DXF file. Use the following options. You can select any Graphic Layer, but it's recommended to use User.Drawings, User.Comments, User.Eco1, or User.Eco2.
 
-**Artwork Scale**
-
-Scale: 1 Inches = 1 Unit(s). (Millimeters has also been known to work with LT2000)
-
-Checked or Unchecked: Scale Lineweights. (depends on your preference for the appearance)
-
-**Color & File Format:**
-
-Number of Colors: 8. (256 seems to work too)
-
-Raster Format: PNG
-
-**Options**
-
-Select: Preserve Appearance
-
-Checked or Unchecked: Export Selected Art Only (this just sets whether you want to export the whole document or just your selection)
-
-Unchecked: Alter Paths for Appearance. (sometimes it needs to be checked, not sure what this really does)
-
-Checked: Outline Text (unless you already outlined the text)
-
-![Settings screenshot](AI-2021-dxf-export-settings.png)
+	![Import settings screenshot](kicad_dxf_import_dialog.png)
