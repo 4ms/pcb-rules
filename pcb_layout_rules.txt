@@ -1,31 +1,24 @@
 "Pref" means preferred minimum value. Do not go below this value unless there is a unique reason to do so. Use the largest value possible for each design, since larger/thicker is more reliable/legible.
 
-"PCBCart Min" is the minimum value our board house will allow. Often there is a surcharge for this. It should be avoided unless there’s no reasonable way around it.
-
-
+"Fab Min" is the minimum value our board house will allow. 
 
 Trace thickness: 
-PCBCart Min: 0.004
-Pref: 0.005
-Typical: 0.008 
+Fab Min: 2-layer: 5mil (0.127mm). 4-layer: 3.5mil (0.09mm)
+Pref: 6mil minimum (.15mm)
+Typical: 8mil if possible (.2mm)
 
 Clearance/spacing:
-PCBCart Min: 0.004
-Pref (if necessary): 0.005
-Pref: 0.010
-Sensitive/Power: 0.015 
+Fab Min: 2-layer: 5mil (0.127mm). 4-layer: 3.5mil (0.09mm)
+Pref (if necessary): 6mil minimum (.15mm)
+Pref: 8mil if possible (0.2mm)
+Sensitive/Power: 12mil if possible (0.3mm)
 
-Via holes:
-PCBCart Min: 0.004
-Pref (if necessary): 0.008
-Pref (cheaper): 0.016 
-
-Via diameter:
-PCBCart Min: 0.012 with 0.004 hole
-Pref: 0.020 with 0.008 hole, or 0.032 with 0.016 hole
+Vias:
+Fab Min:15.7mil diameter/7.87mil hole (0.4mm diameter/0.2mm hole)
+Pref: 20mil diameter/8mil hole minimum, or 32mil diameter/16mil hole if possible
 
 Silk legends: (Height/Width/Thickness)
-PCBCart Min: ???
+Fab Min: 40mil(1mm) min height. 6mil (0.15mm) min line thickness
 Pref: 0.040/0.040/0.006 = 1mm/1mm/.15mm
 Min legible: 0.024/0.024/0.006 = 0.6mm/0.6mm/.15mm
 Bigger and thicker is easier to read, if there’s room.
@@ -33,6 +26,8 @@ Bigger and thicker is easier to read, if there’s room.
 Distance from Edge Cut to pad or trace:
 Pref: 10mil
 
+Distance between jack and LED w/light pipe (Center to Center):
+345mil (8.76mm)
 
 Height and Width of PCB:
 Height ideal: 4.3" (109.22mm)
