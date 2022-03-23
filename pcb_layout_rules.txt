@@ -34,4 +34,4 @@ Height ideal: 4.3" (109.22mm)
 Heigh max (if necessary): 4.365" (110.871mm)
 Width ideal < width of faceplate (EnsOsc = 2.9mm shorter than faceplate)
 Width max = width of faceplate
-
+Minimum distance from edge of PCB to edge of faceplate: 0.347" (8.81mm)
