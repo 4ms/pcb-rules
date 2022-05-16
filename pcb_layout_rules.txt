@@ -8,13 +8,17 @@ Pref: 6mil minimum (.15mm)
 Typical: 8mil if possible (.2mm)
 
 Clearance/spacing:
-Fab Min: 2-layer: 5mil (0.127mm). 4-layer: 3.5mil (0.09mm)
+Fab Min: 
+	2-layer no BGAs: 5mil (0.127mm). 
+	2-layer w/BGA: 4mil/4mil (0.102mm) e.g. STM32F722IEK
+	4-layer: 3.5mil (0.09mm) e.g. STM32MP153DAD
 Pref (if necessary): 6mil minimum (.15mm)
 Pref: 8mil if possible (0.2mm)
 Sensitive/Power: 12mil if possible (0.3mm)
 
 Vias:
-Fab Min:15.7mil diameter/7.87mil hole (0.4mm diameter/0.2mm hole)
+Proto Fab Min:15.7mil diameter/7.87mil hole (0.4mm diameter/0.2mm hole)
+Production Fab Min: 0.15mm hole to go from L1 to L4 (4-layer board), presumably also for normal vias on a 2-layer board
 Pref: 20mil diameter/8mil hole minimum, or 32mil diameter/16mil hole if possible
 
 Silk legends: (Height/Width/Thickness)
@@ -35,3 +39,6 @@ Heigh max (if necessary): 4.365" (110.871mm)
 Width ideal < width of faceplate (EnsOsc = 2.9mm shorter than faceplate)
 Width max = width of faceplate
 Minimum distance from edge of PCB to edge of faceplate: 0.347" (8.81mm)
+
+Micro-Vias:
+Prodcution minimum: 0.1mm hole L1->L2
