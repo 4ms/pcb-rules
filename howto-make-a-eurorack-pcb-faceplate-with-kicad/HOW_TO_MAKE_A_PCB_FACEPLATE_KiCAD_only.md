@@ -3,20 +3,23 @@
 ### Part 1: PCB Faceplate (holes and milling) ###
 
   
-  1. Create a new folder called `MyProjectName-FACEPLATE` inside the kicad project directory. 
+  1. Create a new folder with the name of the revision (example: `p5`) inside the `faceplate` folder at the root of the kicad project. (If this is the first faceplate for this module, you might need to create the `faceplate` folder. Put it in the root directory, not inside a p1, p2, etc. folder)
+ 
+ 	![](folder-structure.png)
 
-  2. Copy the pcb file (`MyProjectName.kicad_pcb`) and project file (`MyProjectMName.kicad_pro`) into the `MyProjectName-FACEPLATE` directory. Rename the file `MyProjectName-FACEPLATE.kicad_pcb`
+  2. Copy the pcb file (`MyProjectName.kicad_pcb`) and project file (`MyProjectName.kicad_pro`) into the new directory. Rename the files `MyProjectName-FACEPLATE.kicad_pcb` and `MyProjectName-FACEPLATE.kicad_pro`
  
   3. Open `MyProjectName-FACEPLATE.kicad_pcb` in Kicad PCB editor
 
   4. Delete all tracks, vias and extra text:
-      - Check only `Tracks`, `Vias`, and `Text` in the Selection Filter (lower-right corner of the PCB window).
+      - Check only `Tracks`, `Vias`, `Text` and `Locked Items` in the Selection Filter (lower-right corner of the PCB window).
       - Make all layers visible (F.Cu, B.Cu, etc)
       - Drag to select everything on the board (only tracks and vias will be selected)
       - Press Delete
-      
+      - Note: The "Step 1" script seems to work with kicad 6, but it's still easier and safer to delete this stuff manually anyways.
+   
   5. Delete all footprints on the front side:
-      - Check only `Footprints` in the Selection Filter
+      - Check only `Footprints` and `Locked Items` in the Selection Filter
       - Make sure F.Cu layer is still visible
       - Drag to select everything on the board (only front footprints will be selected)
       - Press Delete
@@ -27,48 +30,47 @@
       - If the board is 8HP or smaller, remove the top-right and bottom-right Rail-Mounting slots.
       
   7. Run the "Make faceplate Step 3 - Convert footprints" script.
-      - All components should be converted to a large via that's reflected across the panel's center Y-axis. 
+      - All components should be converted to large vias that are reflected across the panel's center Y-axis. 
       - If any component remains, you need to:
-          - 1) Manually convert it to a faceplate using the Change Footprint window.
+          - 1) Manually convert it to a faceplate via using the Change Footprint window.
           - 2) Reflect it across the center of the board by changing the X coordinate:
               - `FaceplateViaX = PanelLeftX + PanelRightX - OriginalComponentX`
   8. Run the "Make faceplate Step 4 - Ground plane" script.
       - All the faceplate vias will change to the "GND" net
       - A new GND zone will be added to the back layer. Press "B" to draw/update it (make sure zones are visible in the left toolbar or else you won't see it)
+      
   9. Delete any extra graphics or text.
       - There should only be the GND zone; two or four rail-mounting slots in the corners; an Edge.Cuts rectangle that's 5.059" tall and the correct width (HP); and a bunch of faceplate vias or slots for the jacks, pots, LEDs, etc. 
       - The User.Comments layer might contain a rectangle of the original PCB dimensions. It's safe to ignore this (it might come in handy later if we have issues lining the artwork up). 
-     
+  
+  10. Manually add two `Rail_Connection_XXHP` footprints (where XX is the HP size, eg 8HP or 20HP). These are located in the 4ms_Faceplate library. The width should be slightly less than the width of the module. 
+       - Flip them to the back side by selecting both and doing "Change Side / Flip" (F key)
+       - Place one at the top and one at the bottom. They should be about 10mil from the top or bottom edge, and centered.
+       - Click on one of these footprints. A pop-up menu should let you choose the Pad or the Footprint. Select the Pad. Now hit 'e' or right-click and select "Properties"
+           - Under Net Name, type or select GND:
+			![](net-setting.png)
+           - Click OK to save and close	the Properties window.
+           - Make sure the footprint says GND on it:
+			![](railconn.png)
 
 ###Part 2: Artwork ###
-  1. Open the Adobe Illustrator file of the artwork and hide all layers except the artwork (no holes, panel outline, milling, etc)
+  1. If someone else already made the artwork PNG, ask if they exported it already. If so, skip to step 4. Otherwise, open the Adobe Illustrator file of the artwork and hide all layers except the artwork (no holes, panel outline, milling, etc)
   2. Use Illustrator's Asset Export feature to export the artwork as a PNG at 2000ppi, with no Anti-aliasing. This gives us 0.5mil resolution. //Todo: create more detailed instructions for using Asset Export.// Note that if you use the Export for Screens... command in Illustrator then do not clip to the artboard (the file will be bigger than it needs to be and bitmap2component will choke).
   3. Create a new folder directly inside the project folder called `artwork sources` and put the Illustrator files and PNG exports in there.
   4. Create another new folder directly inside the project folder called `artwork.pretty` (we'll use it in the next step).
-  5. Black & Gold, White & Silver faceplates (faceplates with copper, mask, and silk layers):
-     * A black & gold faceplate is defined as having black mask and exposed copper (gold, silver, or tin plated), and white silk screen.
-     * A white & silver faceplate is defined as having white mask and exposed copper (gold, silver, or tin plated), and a black silk screen.
-     * Both of these require three artwork files: silk, copper, and mask
-     * Black & Gold:
-        * This is some advice based on our experience with the SWN: The silk layer should not overlap with the copper or mask layer. So wherever there is a pixel in the silk PNG, there should not be a pixel in the mask or copper PNG. Why? Because putting silk on top of a copper layer makes it look kind of runny. Putting silk on the mask layer means the silk is on top of a mask opening, so it's on bare FR4 and looks bad. Of course, you can break this rule but think carefully about it!
-        * To make it look like silk is printed on top of copper, the copper should be cut out where the text appears. No silk should be where the copper is cut out. We want it to be black inside the copper, which means we want mask ink, not silk, inside the copper. Thus the
-        * The copper and mask layers should be the same. This just means all copper will be exposed; and anywhere there's no copper there will be black mask (with or without silk on top of the mask). Why? If there is any difference between the copper and mask, it'll just look like a little raised bump where the mask opening is not present but the copper is; or conversely it'll be bare FR4 fiberglass where the mask opening is present and the copper is not.
-        
-     * White & Silver:
-        * This advice is based on the SWN and the STS: the silk layer should not overlap with the copper or mask layers (same reasoning as for Black & Gold, see above). To make it look like words or art is printed on top of copper, the copper should be cut out where the words appears, and the silk layer should have the art.
-        * The copper and mask layers should be different: The mask layer openings should appear wherever there is copper, plus there should be the mask openings where there's silk within a copper region. This makes the silk look like it's on top of the copper region.
+  5. If this is a Black & Gold or White & Silver faceplate (faceplates with copper, mask, and silk layers), then read the section at the bottom of this file.
 
-
-  2. Bitmap2component (KiCAD program)
+  6. Bitmap2component (KiCAD program)
      * Click `Load Bitmap` and select the PNG file
      * Set Format to `Footprint (.kicad_mod file)`
      * Set Threshold to 50
-     * Do not set check Negative
+     * Do not check Negative
      * Set Board Layer for Outline to `Front silk screen`
-     		* For black/gold or white/gold faceplates, select `Front solder mask` for the mask file, or select `Eco1.User` for the gold/copper layer (see below)
-     * Set `Threshold Value` to 99
+          * For black/gold or white/gold faceplates, select `Front solder mask` for the mask file, or select `Eco1.User` for the gold/copper layer (see below)
+     	
      * Click the `Black&White Picture` tab and verify the preview looks accurate.
-     * Click `Export` and then  save the file in `artwork.pretty` folder. Call it `artwork-layername-revXXX.kicad_mod`, where layername is the layer (silk, copper, mask) and revXXX is the revision like "rev2c"
+     * Click `Export` and then  save the file in `artwork.pretty` folder. Call it `artwork-layername-revXXX.kicad_mod`, where layername is the layer (silk, copper, mask) and revXXX is the revision like "rev2c" (Revision is NOT the proto#, i.e. it's not p2. Revision is just an internal way to keep track if we modify the art and nothing else)
+     
      * For black/gold or white/gold faceplates with the copper layer (Gold or Silver):
        * Unfortunately KiCAD does not support this directly. But it's easy to do manually:
      	  * You already should have exported the gold artwork to the `Eco1.User` layer
@@ -128,7 +130,7 @@
   17. Verify the layers look good: zoom in and out, hide/show layers, select layers to bring them to the front, etc.
   		- TODO: list specific things to look for (problems, etc)
   
-  18. Zip up the gerber files and drl files into a zip file named `MyProject-revision#.zip`. revision# should be either `p#` such as p1, p2, p3, etc for prototypes, or `v#.#` such as `v1.2` for production boards.
+  18. Zip up the gerber files and drl files into a zip file named `MyProject-faceplate-XX.zip`. Where XX is either `p#` such as p1, p2, p3, etc for prototypes, or `v#.#` such as `v1.2` for production boards.
   19. Send the files to JLCPCB or Imagineering and you're done! 
  
  
@@ -148,3 +150,19 @@
       10. Select the clear area footprint and delete it. Immediately export the back copper layer gerber.
       11. Of course, if kicad ever changes whereby it automatically updates the zone when something is deleted, then this trick won't work. But perhaps we could still export a gerber before deleting the clear area footprint, and then manually delete these footprint's zones in the gerber file.
 	
+	 -------------------------------
+ 
+### Faceplates with Gold or Silver ###
+
+ * A black & gold faceplate is defined as having black mask and exposed copper (gold, silver, or tin plated), and white silk screen.
+ * A white & silver faceplate is defined as having white mask and exposed copper (gold, silver, or tin plated), and a black silk screen.
+ * Both of these require three artwork files: silk, copper, and mask
+ * Black & Gold:
+    * This is some advice based on our experience with the SWN: The silk layer should not overlap with the copper or mask layer. So wherever there is a pixel in the silk PNG, there should not be a pixel in the mask or copper PNG. Why? Because putting silk on top of a copper layer makes it look kind of runny. Putting silk on the mask layer means the silk is on top of a mask opening, so it's on bare FR4 and looks bad. Of course, you can break this rule but think carefully about it!
+    * To make it look like silk is printed on top of copper, the copper should be cut out where the text appears. No silk should be where the copper is cut out. We want it to be black inside the copper, which means we want mask ink, not silk, inside the copper. Thus the
+    * The copper and mask layers should be the same. This just means all copper will be exposed; and anywhere there's no copper there will be black mask (with or without silk on top of the mask). Why? If there is any difference between the copper and mask, it'll just look like a little raised bump where the mask opening is not present but the copper is; or conversely it'll be bare FR4 fiberglass where the mask opening is present and the copper is not.
+    
+ * White & Silver:
+    * This advice is based on the SWN and the STS: the silk layer should not overlap with the copper or mask layers (same reasoning as for Black & Gold, see above). To make it look like words or art is printed on top of copper, the copper should be cut out where the words appears, and the silk layer should have the art.
+    * The copper and mask layers should be different: The mask layer openings should appear wherever there is copper, plus there should be the mask openings where there's silk within a copper region. This makes the silk look like it's on top of the copper region.
+
