@@ -4,48 +4,58 @@ Proto names: **p1**, **p2**, **p3** ...
 
 Production names: **v1.0**, **v1.1**, **v1.1a**, **v2.0**, **v1.1-f723**, **v1.1-m13** ...
 
-Revision names: **v1.1rc1**, **v1.1rc2**, **v1.2rc1** ...
+In-progress revision names: **v1.1rc1**, **v1.1rc2**, **v1.2rc1** ...
 
 
+##Overall concepts##
+
+ - No extra subfolders until they're needed. Example: we only create the protos/ folder and put p1/, p2/, etc into it after we've gone into production.
+ - Don't copy production files from project to project.
+ - Use git tags whenever you send files to be produced (any board house)
+ - Use informative commit messages in git so that, if we need to figure out some issue, we could pin point what happened at a point in the past. This also means we don't need to keep all minor variations around, just the versions that were actually ordered and are currently in development.
+ - Every file we sent to any board house needs to be in the prodution/ folder for that PCB version. This makes it easy for anyone (not just PCB/hardware team) to know exactly what files we need to re-order something (especially since we may not order everything with Posin). This includes questions and responses from Posin.
+ 
 
 ##Protos##
-While a project is still being developed, all prototypes can exist in the root folder. But once there is a v1.0 created, and production has started, all ***p***'s must be moved into a folder called ***protos***. The following is a guide for how protos should look
+While a project is still being developed, all prototypes can exist in the root folder. But once there is a v1.0 created, and production has started, all **p#** folders must be moved into a folder called **protos**. The following is a guide for how a proto folder should look.
 
 
-* ***p1***
+* ***p1/***
 	* project.kicad_pcb
 	* project.kicad_pro
 	* project.kicad_sch
 	* fp-lib-table
 	* sym-lib-table
-	* ***production*** `the p1 production folder will typically only have JLCPCB files`
+	* ***production/*** `If there's just one production run, there's no need for sub-folders.`
 		* bom.csv
 		* gerber.zip
 		* positions.csv
-* ***p2***
+		* parts-used.csv `< Download these files after ordering and save them here`
+		* parts-unused.csv `<`
+* ***p2/***
 	* project.kicad_pcb
 	* project.kicad_pro
 	* project.kicad_sch
 	* fp-lib-table
 	* sym-lib-table
-	* ***production*** `p2 was ordered from JLC and then later sent to Posin for beta units`
-		* ***jlcpcb*** 
-			* project-p2_bom.csv
-			* project-p2_gerber.zip
-			* project-faceplate-p2_gerber.zip `copied over from faceplate project`
-			* project-p2_positions.csv
-		* ***posin***
-			* ***bom-responces***
-				* project-p2-bom_(20230331 cost).xlsx
+	* ***production/*** `p2 was ordered from JLC and then later sent to Posin for beta units`
+		* ***JLCPCB*** 
+			* project_bom.csv
+			* project_gerber.zip
+			* project-faceplate_gerber.zip `copied over from faceplate project`
+			* project_positions.csv
+		* ***Posin***
+			* ***bom-responses***
+				* project-bom_(20230331 cost).xlsx
 			* ***EQ***
-				* project-p2-EQ.xlsx
-				* project-p2-EQ-response.xlsx
+				* project-EQ.xlsx
+				* project-EQ-response.xlsx
 			* ***submission*** `contains all the files that were sent to Posin`
 				* project-p2-bom.xlsx
 				* project-p2-pos.csv
 				* project-p2-gerbers.zip
-				* project-p2a-gerbers.zip `note a letter is added after, if for example posin notices an issue on the PCB`
-				* project-p2-images.zip `images should be moved and renamed to v1.0 once betas are confirmed`
+				* project-p2a-gerbers.zip `note: a letter is added after, if for example posin notices an issue on the PCB and we make minor changes. Do not save a copy of the v1.0 Kicad project, make sure it's updated to match v1.0a`
+				* project-p2-images.zip `If there are no changes, then images/build guides should be moved (not copied) and renamed to v1.0 once betas are confirmed`
 
 ###Prototyping and Production version with different parts
 
