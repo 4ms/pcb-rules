@@ -27,15 +27,24 @@ In-progress revision names: **v1.1rc1**, **v1.1rc2**, **v1.2rc1** ...
  - Just keep the zipped copy of production files (gerbers, images...)
 
 
-**DG: Check the above rules, do they match what we discussed? **
+**DG: Check the above rules, do they match what we discussed?**
 
 ## Using Git ##
  - Create and push a git tag whenever you send files to be produced (any board house). Name the tag something like `JLCPCB-ordered` or `Posin-beta-units`
  - Use informative commit messages in git so that, in the unlikely event that we need to figure out some issue, we could look at the commit log and roll back. This means we don't need to keep all minor variations around, just the versions that were actually ordered with all corrections/fixes applied.
 
-##Protos##
-While a project is still being developed, all prototypes can exist in the root folder. But once there is a v1.0 created, and production has started, all **p#** folders must be moved into a folder called **protos**. The following is a guide for how a proto folder should look.
+##Project example (Proto stage)##
+While a project is still being developed, all prototypes can exist in the root folder. Faceplates get their own folder on the root level
 
+* ***faceplate/***
+	* ***rev1/***
+		* project-faceplate.kicad_pcb
+		* project-faceplate.kicad_pro
+		* artwork.pretty/
+		* artwork sources/
+		* fp-lib-table
+		* lineup/ `any files needed for lining up the faceplate with PCB and/or artwork files`
+		* `Notice there are no gerber files here. Only save gerbers if we ordered the faceplates independently from a project (e.g. black faceplates that we stock separately)` **DG: Is this what we want?**
 
 * ***p1/***
 	* project.kicad_pcb
@@ -74,24 +83,28 @@ While a project is still being developed, all prototypes can exist in the root f
 				* project-p2a-gerbers.zip `note: a letter is appended, if for example Posin notices an issue on the PCB and we make minor changes. The Kicad project should be saved so it matches p2a, not p2`
 				* project-p2-images.zip
 
-###Prototyping and Production version with different parts
 
-In cases when multiple chips are being tested on different protos, the protos can be further grouped by the chip they are using. For example, in the image below there are three different chips being used: the f723, mp13 and mp15, each with their own folder. We can see mp15 branched at **p3** and mp13 branched at **p5**, while f723 started as **p1**
-
-![Proto Folder](img/protos-format.png)
-
-If a production unit is updated with a new part and nothing else about the circuit has been revised, **v1.0** can be renamed to include that part (ex. ***v1.0-f723***) and another **v1.0** will be created that includes the new part (ex. ***v1.0-mp13***)
-
-
-
-	
 
 ##Released Versions, Root folder, and Revisions##
-
+Once there is a v1.0 created, and production has started, all **p#** folders must be moved into a folder called **protos**. 
 
 * ***faceplate/***
 	* ***rev1/***
 	* ***rev2/***
+		* project-faceplate-rev2.kicad_pcb
+		* project-faceplate-rev2.kicad_pro
+		* artwork.pretty/
+		* artwork sources/
+		* fp-lib-table
+		* `Notice no gerbers here`
+	* ***rev2-black/***
+		* project-faceplate-rev2.kicad_pcb
+		* project-faceplate-rev2.kicad_pro
+		* artwork.pretty/
+		* artwork sources/
+		* fp-lib-table
+		* production/
+			* project-faceplate-rev2-black-gerbers.zip `We order this separately, it's not part of the normal production`
 * ***protos/***
 	* ***p1/***
 	* ***p2/***
@@ -158,6 +171,15 @@ If **v1.0** comes back from Posin and needs rework/mods done, a **rework** folde
 
 The submission folder for **v1.0** will more or less be a copy of the submission folder from from the protos submitted for betas, however the gerbers should be updated with the **v1.0** silk.
 
+###Projects variations for different chips
+
+In cases when multiple chips are being tested on different protos, or if we have multiple production versions (each using a different chip), then the projects can be further grouped by the chip they are using. For example, in the image below there are three different chips being used: the f723, mp13x and mp15x, each with their own folder. We can see mp15x branched at **p3** and mp13x branched at **p5**, while f723 started as **p1**
+
+![Proto Folder](img/protos-format.png)
+
+If a production unit is updated with a new part and nothing else about the circuit has been revised, **v1.0** can be renamed to include that part (ex. ***v1.0-f723***) and another **v1.0** will be created that includes the new part (ex. ***v1.0-mp13x***). The PCB silk should say the exact version including the chip (v1.0-mp13x or v1.0-F723). Since the first v1.0 might not have the chip suffix (since we didn't know there would be a new one), we should keep the original name in the folder (but it's OK to name the folder "v1.0 (v1.0-F723)" **DG: Does this seem reasonable?**
+
+	
 ###Revisions
 
 Revisions will be treated like protos and also live in the protos folder, however they will have a different naming convention. For example, if **v1.0** comes back from Posin and some revisions need to be made in order to make **v1.1**, the revision will be created in the protos folder and be called **v1.1rc1**.  The rc stands for "Release Candidate". This revision will go through the same process as a proto including production folders for JLCPCB. If a second revision is needed it will be named **v1.1rc2** and so on. Once **v1.1** is ready to be ordered from Posin, a **v1.1** folder will be created from the last revision and a new submission will be made to Posin with the updated project version being **v1.1**.
