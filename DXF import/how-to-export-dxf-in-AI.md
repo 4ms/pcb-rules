@@ -7,7 +7,7 @@
 
 3. Paste the objects and drag them to a new place on the screen
 
-4. With all desired objects still highlighted, go to "Object" in the Menu and select "Ungroup". Do this a total of three times.
+4. With all desired objects still highlighted, go to "Object" in the Menu and select "Ungroup". Repeat this until "Ungroup" is greyed out.
 
 5. Change fill to empty and change stroke to black - you can find this under "Window" in the menu and select "Color". Note that some objects may remain gray. This hasn't caused a problem yet.
 
