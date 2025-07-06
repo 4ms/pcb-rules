@@ -1,44 +1,91 @@
-"Pref" means preferred minimum value. Do not go below this value unless there is a unique reason to do so. Use the largest value possible for each design, since larger/thicker is more reliable/legible.
+Track width/spacing:
+===================
 
-"Fab Min" is the minimum value our board house will allow. 
-
-Trace thickness: 
-Fab Min: 2-layer: 5mil (0.127mm). 4-layer: 3.5mil (0.09mm)
-Pref: 6mil minimum (.15mm)
-Typical: 8mil if possible (.2mm)
-
-Clearance/spacing:
+Track thickness/clearance
 Fab Min: 
 	2-layer no BGAs: 5mil (0.127mm). 
 	2-layer w/BGA: 4mil/4mil (0.102mm) e.g. STM32F722IEK
 	4-layer: 3.5mil (0.09mm) e.g. STM32MP153DAD
-Pref (if necessary): 6mil minimum (.15mm)
-Pref: 8mil if possible (0.2mm)
-Sensitive/Power: 12mil if possible (0.3mm)
+	4-layer BGA fan-outs: Can do 3mil (Posin charges extra)
+Pref: 
+    6mil minimum (.15mm), 8mil if possible (0.2mm)
+High current: 
+    12mil if possible (0.3mm)
 
-Vias:
-Proto Fab Min:15.7mil diameter/7.87mil hole (0.4mm diameter/0.2mm hole)
-Production Fab Min: 0.15mm hole to go from L1 to L4 (4-layer board), presumably also for normal vias on a 2-layer board
-Pref: 20mil diameter/8mil hole minimum, or 32mil diameter/16mil hole if possible
+Posin:
+ - 0.09mm/0.09mm is OK (example: MetaModule p11)
+ - Don't know the minumum they will do but 0.073mm will cost extra (see email May 6, 2022)
 
-Silk legends: (Height/Width/Thickness)
+JLCPCB: 
+ From their Capabilities page:
+ - 2layer: 0.1mm/0.1mm min
+ - 4layer: 0.09mm/0.09mm min (verifed with mp153-devboard)
+ - 4layer: in BGA fan-outs 3mil (0.0762mm) is acceptable
+
+
+BGA Pad diameter:
+================
+
+**Summary:** Unknown... use 0.250 if possible?
+
+Note: P0.5mm with 0.09mm track/space leaves 0.230mm pad
+
+Posin:
+ - Don't know minimum, but 0.230mm has been done with MM board (P0.5mm)
+ - 0.28mm pad done with DLDs
+
+JLCPCB:
+ - BGA pad diameter ≥ 0.25 mm (according to website)
+   - But 0.230mm has been done with mp153-devboard (P0.5mm) with no failures so far
+ - Same clearance of 0.1mm for 2layer, 0.09mm for 4layer
+
+Vias
+====
+
+**Summary:** Prefer 0.3mm hole, 0.6mm diameter. Drop to 0.3mm hole/0.5mm dia if needed. Min 0.15mm hole, 0.25mm diameter.
+Need to use laser vias for 0.1mm.
+
+Posin:
+ - Min. hole: 0.15mm through all layers
+ - Min. laser via 0.1mm hole between L1 and L2 (or L3 and L4)
+
+JLCPCB:
+ - website recommends 0.3mm hole, 0.45m diameter
+ - charges more for 0.25mm hole, 0.4m diameter
+ - charges more for 0.2mm hole, 0.35m diameter
+ - charges more for 0.15mm hole, 0.3mm diameter, will go down to 0.25mm diameter
+
+Vias-in-Pads:
+============
+
+Posin:
+- Can do laser holes on pad. We had lots of failures with a run of these DLDs.(0.28mm pad for P0.5mm, 0.1mm laser via to L2)
+
+JLCPCB:
+- from website: "Vias can be placed within BGA pads using filled and plated-over vias" 0.15mm-0.5mm
+
+
+Silk legends:
+============
+(Height/Width/Thickness)
 Fab Min: 40mil(1mm) min height. 6mil (0.15mm) min line thickness
 Pref: 0.040/0.040/0.006 = 1mm/1mm/.15mm
 Min legible: 0.024/0.024/0.006 = 0.6mm/0.6mm/.15mm
 Bigger and thicker is easier to read, if there’s room.
 
 Distance from Edge Cut to pad or trace:
+======================================
 Pref: 10mil
 
-Distance between jack and LED w/light pipe (Center to Center):
+Distance between jack and LED w/light pipe
+==========================================
+(Center to Center):
 345mil (8.76mm)
 
-Height and Width of PCB:
+Height and Width of Eurorack PCB:
 Height ideal: 4.3" (109.22mm)
 Heigh max (if necessary): 4.365" (110.871mm)
 Width ideal < width of faceplate (EnsOsc = 2.9mm shorter than faceplate)
 Width max = width of faceplate
 Minimum distance from edge of PCB to edge of faceplate: 0.347" (8.81mm)
 
-Micro-Vias:
-Prodcution minimum: 0.1mm hole L1->L2
