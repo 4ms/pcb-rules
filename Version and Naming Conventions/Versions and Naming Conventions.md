@@ -1,4 +1,4 @@
-##Versions and Naming Conventions##
+## Versions and Naming Conventions ##
 
 Proto names: **p1**, **p2**, **p3** ...
 
@@ -7,16 +7,16 @@ Production names: **v1.0**, **v1.1**, **v1.1a**, **v2.0**, **v1.1-f723**, **v1.1
 In-progress production revision names: **v1.1rc1**, **v1.1rc2**, **v1.2rc1** ...
 
 
-##Overall concepts##
+## Overall concepts ##
  - **Only keep versions that were actually made into a physical PCB, or are actively in development.**
 
 	- Stated another way: If we order a board, then we make corrections to the gerbers or BOM and re-send the corrected files, then just keep the corrected version that was actually produced.
 
 	- Stated another way: Do not keep old PCB, schematic, gerbers, or BOMs that have errors unless we physically built a board with those errors on it.
 
-   - Example: We need order a PCB+Assembly. Send the files to Posin. Then commit them, tag the commit "Ordered with Posin", and push to the git repo. Then Posin sends a BOM costs file and there is a mistake. Make the corrections in the BOM and/or schematic and send it back to Posin. Then make a commit, tag it and push it to the git repo. The old uncorrected files only exist in the git history at this point.
+   - Example: We need to order a PCB+Assembly. Send the files to Posin. Then commit them, tag the commit "Ordered with Posin", and push to the git repo. Then Posin sends a BOM costs file and there is a mistake. Make the corrections in the BOM and/or schematic and send it back to Posin. Then make a commit, tag it and push it to the git repo. The old uncorrected files only exist in the git history at this point.
 
- - Don't change production files after the physical boards are received in-hand. Make a new project instead.
+ - Don't change production files after the physical boards are received in-hand. Make a new project with a new version instead. Stated another way: every version folder represents a physical board we received.
 
  - Don't keep **identical** copies of files. Just keep a file in one place. Having multiple copies wastes time trying to figure out which one to use, or updating both versions if there's a correction to be made.
 
@@ -28,10 +28,12 @@ In-progress production revision names: **v1.1rc1**, **v1.1rc2**, **v1.2rc1** ...
 
 
 ## Using Git ##
+
  - Create and push a git tag whenever you send files to be produced (any board house). Name the tag something like `JLCPCB-ordered` or `Posin-beta-units`
  - Use informative commit messages in git so that, in the unlikely event that we need to figure out some issue, we could look at the commit log and roll back. This means we don't need to keep all minor variations around, just the versions that were actually ordered with all corrections/fixes applied.
 
-##Project example (Proto stage)##
+## Project example (Proto stage) ##
+
 While a project is still being developed, all prototypes can exist in the root folder. Faceplates get their own folder on the root level
 
 * ***faceplate/***
@@ -83,7 +85,8 @@ While a project is still being developed, all prototypes can exist in the root f
 
 
 
-##Released Versions, Root folder, and Revisions##
+## Released Versions, Root folder, and Revisions ##
+
 Once there is a v1.0 created, and production has started, all **p#** folders must be moved into a folder called **protos**. 
 
 * ***faceplate/***
@@ -169,40 +172,43 @@ If **v1.0** comes back from Posin and needs rework/mods done, a **rework** folde
 
 The submission folder for **v1.0** will more or less be a copy of the submission folder from from the protos submitted for betas, however the gerbers should be updated with the **v1.0** silk.
 
-###Projects variations for different chips
+### Projects variations for different chips
 
-In cases when multiple chips are being tested on different protos, or if we have multiple production versions (each using a different chip), then the projects can be further grouped by the chip they are using. For example, in the image below there are three different chips being used: the f723, mp13x and mp15x, each with their own folder. We can see mp15x branched at **p3** and mp13x branched at **p5**, while f723 started as **p1**
+#### Prototypes
+
+In cases when multiple chips are being tested on different protos, then the projects can be further grouped by the chip they are using. For example, in the image below there are three different chips being used: the f723, mp13x and mp15x, each with their own folder. We can see mp15x branched at **p3** and mp13x branched at **p5**, while f723 started as **p1**. (Do not do this for production versions, this is only a convenience for prototyping when we want to explore multiple branches at the same time).
 
 ![Proto Folder](img/protos-format.png)
 
-If a production unit is updated with a new part and nothing else about the circuit has been revised, **v1.0** can be renamed to include that part (ex. ***v1.0-f723***) and another **v1.0** will be created that includes the new part (ex. ***v1.0-mp13x***). The PCB silk should say the exact version including the chip (v1.0-mp13x or v1.0-F723). Since the first v1.0 might not have the chip suffix (since we didn't know there would be a new one), we should keep the original name in the folder (but it's OK to name the folder "v1.0 (v1.0-F723)" **DG: Does this seem reasonable?**
+#### Production
 
+If we have several variations of a product that ANY of them can be ordered and none of them are the "latest" version (that is, they are all the "latest" version), then add a suffix to the version like `v1.0-f723` and `v1.0-f746`. This is a rare edge case, but it happened during the chip shortages, when we would have more than one v1.0 versions ready to order if any of the chips became available.
 	
-###Revisions
+### Revisions
 
 Revisions will be treated like protos and also live in the protos folder, however they will have a different naming convention. For example, if **v1.0** comes back from Posin and some revisions need to be made in order to make **v1.1**, the revision will be created in the protos folder and be called **v1.1rc1**.  The rc stands for "Release Candidate". This revision will go through the same process as a proto including production folders for JLCPCB. If a second revision is needed it will be named **v1.1rc2** and so on. Once **v1.1** is ready to be ordered from Posin, a **v1.1** folder will be created from the last revision and a new submission will be made to Posin with the updated project version being **v1.1**.
 
 There is no need to resubmit or copy image/build guides. Posin will have them and, as long as nothing about the build changes, they will be used for all future versions. We should notify Posin if we change the name of a project, for example if we re-order p4 as v1.0 then we should Posin that from now on, we'll be calling it v1.0 (not p4).
 
-###Faceplates
+### Faceplates
 
-The final faceplate may reach v1.0 sooner than the PCBs and does not need to match the current PCB version. They don't typically get updated much past one or two prototypes. Oncer gerbers are generated and the panel is confirmed, a **v1.0** folder can be made and its production folder could contain only the zipped gerbers. Those gerbers should be copied to the first Posin submission folder. **DG: Let's discuss faceplate naming conventions**
+Faceplates should be named with `rev1`, `rev2`, etc. This avoids confusion with things like having a v1.0.1 faceplate and a v1.2 PCB.
+Many projects use v1.0 for the final production faceplate, which is OK, but it's also OK to keep the faceplate version as `rev4` for the production version.
+The important thing to remember to do manually is that for normal faceplates that go onto modules *put the faceplate gerbers in the PCB production folder*. On the other hand, for faceplates that are ordered alone (not as part of a PCBA module assembly), these gerbers can live in the `faceplate/revX/production/` folder.
 
 
-##BOMs vs Gerbers##
+## BOMs vs Gerbers ##
 
 In the situation when gerbers v1.0 are submitted to posin, and an error is found *before the boards are made*, the correction should be made in Kicad, and new gerbers should be generated and given the name v1.0a. A letter is added anytime the version has been generated but then changed **before the boards are made**. If there are changes after the boards are made, it gets a new project folder.
 
-For BOM, in the past adding a letter has been used, however, using a datecode is likely what we will do moving forward, since it is typically already provided and there is a lot more back and forther when figuring out the BOM. **DG: This is ambigious whether it means adding a datecode when we make a new order (like, 6 months later) vs. if we make a change two days after ordering but before the boards are made. I'm proposing we don't keep any old version, only the latest (for any particular order)**
+### When version don't match
+It's common to have one submission include a faceplate that is rev2, PCB gerbers that are v1.1, and a BOM that is v1.0. That's OK and there is no need to update versions if no changes were made. 
 
-###When version don't match
-It's common to have one submission include a faceplate that is v1.0, PCB gerbers that are v1.1, and a BOM that is v1.0. In this example, the faceplate was made at v1.0 and hasn't needed to be changed. The PCB was revised and updated to v1.1 but still matched the same v1.0 faceplate. And if the circuit was updated but no parts were added or changed, the last BOM can still be used even though it doesn't match the most recent version. Any submissions to posin should be in the submission folder for that PCB version. **DG: But, Posin always sends a BOM-cost file, so wouldn't that get the v1.1? I think we can simplify this paragraph to just mention faceplate versions vs. PCB versions.**
-
-##Examples
+## Examples ##
 
 ![Plot settings](img/file-format.png) ![Plot settings](img/file-format2.png)
 
-**DG: These need to be updated to reflect the above rules:**
+**These need to be updated to reflect the above rules:**
 
   - Remove .xml files
   - Remove EQ files (just keep the response)
