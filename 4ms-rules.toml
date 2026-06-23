@@ -1,0 +1,139 @@
+# ============================================================
+# 4ms Company — KiCad PCB Rules
+# ============================================================
+# This file is the single source of truth for 4ms PCB rules.
+# Edit it here, then run:
+#   python3 ~/kicad/4ms-kicad-script/pcb-rules-update/update_pcb_rules.py <project-dir>
+#
+# The script applies these values to:
+#   *.kicad_dru   — DRC minimum constraints
+#   *.kicad_pro   — Board Setup presets (track widths, via sizes)
+#
+# Values marked "ACTIVE" are read by the script.
+# Everything else is reference/notes only.
+# ============================================================
+
+
+# ------------------------------------------------------------
+# TRACK WIDTH / CLEARANCE
+# ------------------------------------------------------------
+#
+# Fab minimums:
+#   2-layer, no BGAs : 5mil   = 0.127mm
+#   2-layer, w/ BGA  : 4mil   = 0.102mm  (e.g. STM32F722IEK)
+#   4-layer          : 3.5mil = 0.09mm   (e.g. STM32MP153DAD)
+#   4-layer BGA fanouts: 3mil = 0.0762mm (Posin charges extra)
+#
+# Preferences:
+#   General minimum  : 6mil   = 0.15mm
+#   Preferred        : 8mil   = 0.2mm
+#   High current     : 12mil  = 0.3mm
+#
+# Posin notes:
+#   - 0.09mm/0.09mm confirmed OK (MetaModule p11)
+#   - 0.073mm possible but costs extra (email May 6 2022)
+#
+# JLCPCB (from Capabilities page):
+#   - 2-layer : 0.1mm/0.1mm min
+#   - 4-layer : 0.09mm/0.09mm min (verified: mp153-devboard)
+#   - 4-layer BGA fanouts: 0.0762mm (3mil) acceptable
+
+[tracks]
+# ACTIVE — DRC enforced minimum (used in .kicad_dru)
+min = 0.09   # mm
+
+# ACTIVE — Pre-defined sizes shown in routing toolbar dropdown
+# 0.0 is always prepended automatically (means "use netclass default")
+presets = [0.09, 0.1, 0.127, 0.2032, 0.3]   # mm
+
+
+# ------------------------------------------------------------
+# VIAS
+# ------------------------------------------------------------
+#
+# Summary: prefer 0.3mm drill / 0.6mm dia.
+#          Drop to 0.3mm drill / 0.5mm dia if needed.
+#          Min 0.15mm drill / 0.25mm dia (mechanical).
+#          Laser vias: 0.1mm drill (L1↔L2 or L3↔L4 only).
+#
+# Posin:
+#   - Min mechanical hole : 0.15mm through all layers
+#   - Min laser via       : 0.1mm hole, L1↔L2 or L3↔L4
+#   - Vias-in-pads: laser holes on pad possible but risky —
+#     had many failures on DLDs (0.28mm pad / 0.1mm laser via to L2)
+#
+# JLCPCB:
+#   - Recommended         : 0.3mm drill / 0.45mm dia
+#   - Extra charge        : 0.25mm drill / 0.4mm dia
+#   - Extra charge        : 0.2mm  drill / 0.35mm dia
+#   - Extra charge        : 0.15mm drill / 0.3mm dia  (min dia 0.25mm)
+#   - Vias-in-pads: filled + plated-over vias, 0.15–0.5mm
+#
+# BGA pad diameter notes:
+#   - Aim for 0.25mm if possible
+#   - P0.5mm pitch with 0.09mm track/space → 0.230mm pad
+#   - Posin: 0.230mm done on MM board (P0.5mm), 0.28mm done on DLDs
+#   - JLCPCB spec: ≥ 0.25mm, but 0.230mm confirmed OK on mp153-devboard
+
+[vias]
+# ACTIVE — DRC enforced minimums (used in .kicad_dru)
+min_diameter = 0.35   # mm
+min_drill    = 0.15   # mm
+
+# ACTIVE — Pre-defined via sizes in Board Setup dropdown
+# Format: [[diameter_mm, drill_mm], ...]
+# 0.0/0.0 is always prepended automatically (means "use netclass default")
+presets = [
+    [0.35, 0.15],   # smallest standard mechanical via (Posin confirmed)
+    [0.4,  0.2],    # standard small
+    [0.6,  0.2],    # standard large (preferred default)
+]
+
+
+# ------------------------------------------------------------
+# OTHER DRC MINIMUMS
+# ------------------------------------------------------------
+# ACTIVE — merged into .kicad_pro Board Setup > Constraints
+
+[constraints]
+min_clearance          = 0.09    # track-to-track, same as min_track
+min_via_annular_width  = 0.1
+min_copper_edge_clearance = 0.1  # pref: 10mil = 0.254mm; 0.1 is DRC floor
+min_hole_clearance     = 0.189653
+min_hole_to_hole       = 0.225
+min_through_hole_dia   = 0.15
+
+
+# ------------------------------------------------------------
+# SILK SCREEN  (reference only — not applied by script)
+# ------------------------------------------------------------
+#
+# Fab minimum : height 1mm / width 1mm / thickness 0.15mm
+#               (40mil / 40mil / 6mil)
+# Preferred   : 1mm / 1mm / 0.15mm
+# Min legible : 0.6mm / 0.6mm / 0.15mm
+#               (24mil / 24mil / 6mil)
+# Note: bigger and thicker is always easier to read when there's room.
+
+
+# ------------------------------------------------------------
+# BOARD LAYOUT REFERENCE  (reference only — not applied by script)
+# ------------------------------------------------------------
+#
+# Edge clearance (pad or trace to Edge Cut):
+#   Preferred: 10mil = 0.254mm
+#
+# Jack-to-LED lightpipe spacing (center to center):
+#   345mil = 8.76mm
+#
+# Eurorack PCB height:
+#   Ideal : 4.300" = 109.22mm
+#   Max   : 4.365" = 110.871mm
+#
+# Eurorack PCB width:
+#   Ideal : slightly less than faceplate width
+#           (EnsOsc example: 2.9mm narrower than faceplate)
+#   Max   : equal to faceplate width
+#
+# Min distance from PCB edge to faceplate edge:
+#   0.347" = 8.81mm

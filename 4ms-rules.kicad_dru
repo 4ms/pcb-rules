@@ -1,0 +1,19 @@
+(version 1)
+
+# 4ms Company Standard PCB Design Rules
+# Source of truth: pcb_layout_rules.txt in this repo
+# Apply to a project with: update_pcb_rules.py <project-dir>
+# (script lives in ~/kicad/4ms-kicad-script/pcb-rules-update/)
+
+(rule "4ms_min_track"
+	(constraint track_width (min 0.09mm))
+)
+
+(rule "4ms_min_clearance"
+	(constraint clearance (min 0.09mm))
+)
+
+(rule "4ms_min_via"
+	(constraint via_diameter (min 0.35mm))
+	(constraint hole_size (min 0.15mm))
+)
