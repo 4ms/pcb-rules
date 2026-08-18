@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "sym-lib-table") (type "Table") (uri "${KICAD_4MS_LIBS}/lib-table-files/sym-lib-table") (options "") (descr ""))
+)

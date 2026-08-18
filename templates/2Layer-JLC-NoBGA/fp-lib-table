@@ -1,0 +1,4 @@
+(fp_lib_table
+	(version 7)
+	(lib (name "fp-lib-table") (type "Table") (uri "${KICAD_4MS_LIBS}/lib-table-files/fp-lib-table") (options "") (descr ""))
+)
